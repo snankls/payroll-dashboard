@@ -1,0 +1,54 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12 stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <table class="table table-striped view-table w-100 mt-3">
+          <tbody>
+            <tr>
+              <td style="width: 30%;">First Name</td>
+              <td style="width: 70%;">{{ currentRecord.first_name }}</td>
+            </tr>
+            <tr>
+              <td>Last Name</td>
+              <td>{{ currentRecord.last_name ? currentRecord.last_name : 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Username</td>
+              <td>{{ currentRecord.username ? currentRecord.username : 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Email Address</td>
+              <td>{{ currentRecord.email }}</td>
+            </tr>
+            <tr>
+              <td>Gender</td>
+              <td>{{ currentRecord.gender ? currentRecord.gender : 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Phone Number</td>
+              <td>{{ currentRecord.phone_number ? currentRecord.phone_number : 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Date of Birth</td>
+              <td>{{ currentRecord.date_of_birth | date:'yyyy-MM-dd' }}</td>
+            </tr>
+            <tr>
+              <td>City</td>
+              <td>{{ currentRecord.city_name ? currentRecord.city_name : 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Address</td>
+              <td>{{ currentRecord.address ? currentRecord.address : 'N/A' }}</td>
+            </tr>
+            <tr>
+              <td>Status</td>
+              <td>{{ currentRecord.status }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

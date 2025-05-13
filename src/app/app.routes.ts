@@ -1,0 +1,88 @@
+import { Routes } from '@angular/router';
+import { BaseComponent } from './views/layout/base/base.component';
+import { AuthGuard } from './auth/auth.guard';
+
+export const routes: Routes = [
+  {
+    path: 'login',
+    loadComponent: () => import('./views/pages/login/login.component').then(c => c.LoginComponent),
+    data: { title: 'Login' },
+  },
+  {
+    path: '',
+    component: BaseComponent,
+    canActivate: [AuthGuard],
+    children: [
+      // Dashboard
+      { path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./views/pages/dashboard/dashboard.component').then(c => c.DashboardComponent),
+        data: { title: 'Dashboard' },
+        canActivate: [AuthGuard]
+      },
+
+      // Companies
+      {
+        path: 'companies',
+        loadComponent: () => import('./views/pages/companies/companies.component').then(c => c.CompaniesComponent),
+        data: { title: 'Companies' },
+        canActivate: [AuthGuard]
+      },
+
+      // Users
+      {
+        path: 'users',
+        loadComponent: () => import('./views/pages/users/users.component').then(c => c.UsersComponent),
+        data: { title: 'Users' },
+        canActivate: [AuthGuard]
+      },
+
+      // Users Add
+      {
+        path: 'users/add',
+        loadComponent: () => import('./views/pages/users/add/add.component').then(c => c.UsersAddComponent),
+        data: { title: 'Users Add' },
+        canActivate: [AuthGuard]
+      },
+
+      // Users Edit
+      {
+        path: 'users/edit/:id',
+        loadComponent: () => import('./views/pages/users/edit/edit.component').then(c => c.UsersEditComponent),
+        data: { title: 'Users Edit' },
+        canActivate: [AuthGuard]
+      },
+
+      // User Profile
+      {
+        path: 'users/profile/:id',
+        loadComponent: () => import('./views/pages/users/profile/profile.component').then(c => c.ProfileComponent),
+        data: { title: 'User Profile' },
+        canActivate: [AuthGuard]
+      },
+
+      // Change Password
+      {
+        path: 'change-password',
+        loadComponent: () => import('./views/pages/users/change-password/change-password.component').then(c => c.ChangePasswordComponent),
+        data: { title: 'Change Password' },
+        canActivate: [AuthGuard]
+      },
+
+      // 404 Page
+      {
+        path: 'error',
+        loadComponent: () => import('./views/pages/error/error.component').then(c => c.ErrorComponent),
+      },
+      {
+        path: 'error/:type',
+        loadComponent: () => import('./views/pages/error/error.component').then(c => c.ErrorComponent)
+      },
+      { path: '**', redirectTo: 'error/404', pathMatch: 'full' }
+    ]
+  },
+];
