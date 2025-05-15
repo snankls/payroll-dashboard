@@ -72,16 +72,23 @@ export class UsersComponent {
 
   fetchUsers(): void {
     this.loadingIndicator = true;
-  
+
     this.http.get<any[]>(`${this.API_URL}/users`).subscribe({
       next: (response) => {
-        console.log(response);
         this.rows = response;
         this.temp = [...response];
         this.loadingIndicator = false;
 
-        // Optionally, you can process image_url if necessary (e.g., fallback for missing images)
+        const today = new Date();
+
         this.rows.forEach((user) => {
+          // ✅ Calculate remaining days
+          const endDate = new Date(user.subscribe_end);
+          const diffTime = endDate.getTime() - today.getTime();
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          user.remaining_days = diffDays >= 0 ? diffDays : 0;
+
+          // ✅ Process image URL
           user.user_image = user.user_image
             ? `${this.IMAGE_URL}/uploads/users/${user.user_image}`
             : 'images/placeholder.png';

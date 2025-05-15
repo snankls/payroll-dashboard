@@ -33,6 +33,9 @@ export class UsersAddComponent {
     last_name: '',
     username: '',
     email: '',
+    subscribe_start: '',
+    subscribe_end: '',
+    refer_by: '',
     phone_number: '',
     gender: 'Male',
     date_of_birth: '',
@@ -122,6 +125,8 @@ export class UsersAddComponent {
     this.isLoading = true;  
 
     const format_Dob = this.formatDate(this.formData.date_of_birth);
+    const subscribe_start = this.formatDate(this.formData.subscribe_start);
+    const subscribe_end = this.formatDate(this.formData.subscribe_end);
 
     const formData = {
       company_id: this.formData.company_id,
@@ -130,6 +135,9 @@ export class UsersAddComponent {
       username: this.formData.username,
       email: this.formData.email,
       phone_number: this.formData.phone_number,
+      subscribe_start: subscribe_start,
+      subscribe_end: subscribe_end,
+      refer_by: this.formData.refer_by,
       gender: this.formData.gender,
       date_of_birth: format_Dob || null,
       city_id: this.formData.city_id,
@@ -138,7 +146,7 @@ export class UsersAddComponent {
       ng_url: this.NG_URL,
     };
   
-    this.http.post(`${this.API_URL}/users/register`, formData).subscribe({
+    this.http.post(`${this.API_URL}/users`, formData).subscribe({
       next: (response) => {
         this.isLoading = false;
         this.router.navigate(['/users']);

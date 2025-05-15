@@ -44,7 +44,7 @@ export const routes: Routes = [
       // Users Add
       {
         path: 'users/add',
-        loadComponent: () => import('./views/pages/users/add/add.component').then(c => c.UsersAddComponent),
+        loadComponent: () => import('./views/pages/users/setup/setup.component').then(c => c.UsersSetupComponent),
         data: { title: 'Users Add' },
         canActivate: [AuthGuard]
       },
@@ -52,7 +52,7 @@ export const routes: Routes = [
       // Users Edit
       {
         path: 'users/edit/:id',
-        loadComponent: () => import('./views/pages/users/edit/edit.component').then(c => c.UsersEditComponent),
+        loadComponent: () => import('./views/pages/users/setup/setup.component').then(c => c.UsersSetupComponent),
         data: { title: 'Users Edit' },
         canActivate: [AuthGuard]
       },

@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
     this.messageTypeLogin = '';
     this.loadingLogin = true;
 
-    this.http.post<LoginResponse>(`${this.API_URL}/login`, loginData).subscribe({
+    this.http.post<LoginResponse>(`${this.API_URL}/admin-login`, loginData).subscribe({
       next: (response) => {
         this.loadingLogin = false;
         if (response.data?.authorisation?.token) {

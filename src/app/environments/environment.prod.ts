@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
-  API_URL: 'https://api.okdashboard.winnyweb.com/api',
-  IMAGE_URL: 'http://api.offerkero.pk',
-  LIVE_URL: 'http://offerkero.pk',
+  API_URL: 'https://api.payroll.themerange.net/api',
+  IMAGE_URL: 'http://api.payroll.themerange.net',
+  LIVE_URL: 'http://dashboard.payroll.themerange.net',
+  NG_URL: 'http://payroll.themerange.net',
 };

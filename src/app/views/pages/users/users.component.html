@@ -66,27 +66,63 @@
               </ng-template>
             </ngx-datatable-column>
             
-            <ngx-datatable-column name="User Name">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.username }}
-              </ng-template>
-            </ngx-datatable-column>
-            
             <ngx-datatable-column name="Email Address">
               <ng-template ngx-datatable-cell-template let-row="row">
                 {{ row.email }}
               </ng-template>
             </ngx-datatable-column>
             
-            <ngx-datatable-column name="Gender">
+            <ngx-datatable-column name="Advance Fee">
               <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.gender }}
+                {{ row.advance_fee }}
               </ng-template>
             </ngx-datatable-column>
             
-            <ngx-datatable-column name="Date of Birth">
+            <ngx-datatable-column name="Services Fee">
               <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.date_of_birth | date:'yyyy-MM-dd' }}
+                {{ row.services_fee }}
+              </ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column name="Purchase Date">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.purchase_date | date:'yyyy-MM-dd' }}
+              </ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column name="Subscribe Start">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.subscribe_start | date:'yyyy-MM-dd' }}
+              </ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column name="Subscribe End">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.subscribe_end | date:'yyyy-MM-dd' }}
+              </ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column name="Remaining Days">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.remaining_days }} days
+              </ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column name="Refer By">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.refer_by }}
+              </ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column name="User Name">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.username }}
+              </ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column name="Gender">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.gender }}
               </ng-template>
             </ngx-datatable-column>
             
@@ -111,7 +147,11 @@
             
             <ngx-datatable-column name="Created at">
               <ng-template ngx-datatable-cell-template let-row="row">
-                <small>{{ row.created_at | date:'yyyy-MM-dd' }}</small>
+                <div>
+                  {{ row.created_by }}
+                  <br />
+                  <small>{{ row.created_at | date:'yyyy-MM-dd' }}</small>
+                </div>
               </ng-template>
             </ngx-datatable-column>
         
