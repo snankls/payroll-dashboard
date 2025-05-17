@@ -7,8 +7,12 @@
         <table class="table table-striped view-table w-100 mt-3">
           <tbody>
             <tr>
-              <td style="width: 30%;">First Name</td>
-              <td style="width: 70%;">{{ currentRecord.first_name }}</td>
+              <td style="width: 30%;">Pin Code</td>
+              <td style="width: 70%;">{{ currentRecord.pin_code }}</td>
+            </tr>
+            <tr>
+              <td>First Name</td>
+              <td>{{ currentRecord.first_name }}</td>
             </tr>
             <tr>
               <td>Last Name</td>
@@ -21,6 +25,26 @@
             <tr>
               <td>Email Address</td>
               <td>{{ currentRecord.email }}</td>
+            </tr>
+            <tr>
+              <td>Advance Fee</td>
+              <td>{{ currentRecord.advance_fee | number }}</td>
+            </tr>
+            <tr>
+              <td>Services Charges</td>
+              <td>{{ currentRecord.service_charges | number }}</td>
+            </tr>
+            <tr>
+              <td>Purchase Date</td>
+              <td>{{ currentRecord.purchase_date }}</td>
+            </tr>
+            <tr>
+              <td>Subscribe Preiod</td>
+              <td>{{ currentRecord.subscribe_start }} - {{ currentRecord.subscribe_end }}</td>
+            </tr>
+            <tr>
+              <td>Refer By</td>
+              <td>{{ currentRecord.refer_by }}</td>
             </tr>
             <tr>
               <td>Gender</td>
@@ -48,6 +72,39 @@
             </tr>
           </tbody>
         </table>
+
+        <div *ngIf="itemsList.length > 0">
+          <h5 class="mt-5">Subscription Details</h5>
+          <table class="table table-hover w-100 mt-3">
+            <thead>
+              <tr>
+                <th>Subscription Start</th>
+                <th>Subscription End</th>
+                <th>Service Charges</th>
+                <th>Payment Method</th>
+                <th>Reason</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of itemsList; let i = index">
+                <td>{{ item.subscribe_start }}</td>
+                <td>{{ item.subscribe_end }}</td>
+                <td>{{ item.service_charges | number }}</td>
+                <td>{{ item.payment_method }}</td>
+                <td>{{ item.reason }}</td>
+                <td>{{ item.subscription_status }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2"><strong>Grand Total</strong></td>
+                <td><strong>{{ totalServiceCharges | number }}</strong></td>
+                <td colspan="3"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
     </div>
   </div>

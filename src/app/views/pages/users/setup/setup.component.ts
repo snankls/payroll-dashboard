@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -36,6 +36,16 @@ interface User {
   };
 }
 
+interface SubscriptionItem {
+  id: number | null;
+  subscribe_start: NgbDateStruct | string | null;
+  subscribe_end: NgbDateStruct | string | null;
+  service_charges: string | null;
+  payment_method: string | null;
+  subscription_status: string | null;
+  reason: string;
+}
+
 @Component({
   selector: 'app-setup',
   standalone: true,
@@ -50,7 +60,7 @@ interface User {
   ],
   templateUrl: './setup.component.html'
 })
-export class UsersSetupComponent {
+export class UsersSetupComponent implements OnInit {
   private API_URL = environment.API_URL;
   private IMAGE_URL = environment.IMAGE_URL;
   private NG_URL = environment.NG_URL;
@@ -62,52 +72,71 @@ export class UsersSetupComponent {
     last_name: '',
     username: '',
     email: '',
-    purchase_date: '',
-    advance_fee: '',
-    services_fee: '',
-    subscribe_start: '',
-    subscribe_end: '',
-    refer_by: '',
+    purchase_date: null,
+    advance_fee: null,
+    services_fee: null,
+    subscribe_start: null,
+    subscribe_end: null,
+    refer_by: null,
     phone_number: '',
     gender: 'Male',
-    date_of_birth: '',
+    date_of_birth: null,
     city_id: null,
     status: 'Inactive',
     address: '',
-    image: ''
+    image: null
   };
-  // currentRecord = {
-  //   company_id: null,
-  //   first_name: '',
-  //   last_name: '',
-  //   username: '',
-  //   email: '',
-  //   subscribe_start: '',
-  //   subscribe_end: '',
-  //   refer_by: '',
-  //   phone_number: '',
-  //   gender: 'Male',
-  //   date_of_birth: '',
-  //   city_id: null,
-  //   status: 'Inactive',
-  //   address: '',
-  //   ng_url: this.NG_URL
-  // };
   
   isEditMode = false;
   isLoading = false;
-  globalError: string = '';
   globalErrorMessage: string = '';
-  errorMessage: any;
+  selectedRows: number[] = [];
+  formErrors: Record<string, string[]> = {};
   selected: any[] = [];
-  formErrors: any = {};
+  
+  // Dropdown options
   companies: any[] = [];
   cities: any[] = [];
-  gender: { id: string; name: string }[] = [];
-  status: { id: string; name: string }[] = [];
+  gender: { id: string; name: string }[] = [
+    { id: 'Male', name: 'Male' },
+    { id: 'Female', name: 'Female' },
+    { id: 'Other', name: 'Other' },
+  ];
+  
+  status: { id: string; name: string }[] = [
+    { id: 'Active', name: 'Active' },
+    { id: 'Inactive', name: 'Inactive' },
+    { id: 'Disabled', name: 'Disabled' },
+  ];
+  
+  payment_method: { id: string; name: string }[] = [
+    { id: 'Bank', name: 'Bank' },
+    { id: 'JazzCash', name: 'JazzCash' },
+    { id: 'Easypaisa', name: 'Easypaisa' },
+    { id: 'Other', name: 'Other' },
+  ];
+  
+  subscription_status: { id: string; name: string }[] = [
+    { id: 'Paid', name: 'Paid' },
+    { id: 'Unpaid', name: 'Unpaid' },
+  ];
+  
+  // Subscription items
+  itemsList: SubscriptionItem[] = [{ 
+    id: null, 
+    subscribe_start: null, 
+    subscribe_end: null, 
+    service_charges: null, 
+    payment_method: null, 
+    subscription_status: null, 
+    reason: '' 
+  }];
+  
+  // Image handling
   imagePreview: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
   
+  // Table related
   rows = [];
   temp = [];
   loadingIndicator = true;
@@ -124,24 +153,10 @@ export class UsersSetupComponent {
     this.fetchCompanies();
     this.fetchCities();
 
-    this.gender = [
-      { id: 'Male', name: 'Male' },
-      { id: 'Female', name: 'Female' },
-      { id: 'Other', name: 'Other' },
-    ];
-
-    this.status = [
-      { id: 'Active', name: 'Active' },
-      { id: 'Inactive', name: 'Inactive' },
-      { id: 'Disabled', name: 'Disabled' },
-      { id: 'Deleted', name: 'Deleted' },
-    ];
-
-    // Handle id-based route
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
-        this.fetchUsers(+id);
+        this.fetchUser(+id);
       }
     });
   }
@@ -152,42 +167,98 @@ export class UsersSetupComponent {
     }
   }
 
-  fetchUsers(id: number) {
-    this.http.get<User>(`${this.API_URL}/user/${id}`).subscribe(user => {
-      this.currentRecord = {
-        ...this.currentRecord,
-        ...user,
-        
-        date_of_birth: this.parseDateFromBackend(
-          typeof user.date_of_birth === 'string' ? user.date_of_birth : undefined
-        ),
-        
-        subscribe_start: this.parseDateFromBackend(
-          typeof user.subscribe_start === 'string' ? user.subscribe_start : undefined
-        ),
-        
-        subscribe_end: this.parseDateFromBackend(
-          typeof user.subscribe_end === 'string' ? user.subscribe_end : undefined
-        ),
-      };
-  
-      if (user.images && user.images.image_name) {
-        this.imagePreview = `${this.IMAGE_URL}/uploads/users/${user.images.image_name}`;
+  clearItemError(index: number, field: string): void {
+    const errorKey = `items.${index}.${field}`;
+    if (this.formErrors[errorKey]) {
+      delete this.formErrors[errorKey];
+    }
+  }
+
+  toggleSelection(index: number): void {
+    const idx = this.selectedRows.indexOf(index);
+    if (idx > -1) {
+      this.selectedRows.splice(idx, 1);
+    } else {
+      this.selectedRows.push(index);
+    }
+  }
+
+  isSelected(index: number): boolean {
+    return this.selectedRows.includes(index);
+  }
+
+  selectAll(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.selectedRows = checked ? 
+      Array.from({ length: this.itemsList.length }, (_, i) => i) : 
+      [];
+  }
+
+  addItemRow(): void {
+    this.itemsList.push({ 
+      id: null, 
+      subscribe_start: null, 
+      subscribe_end: null, 
+      service_charges: null, 
+      payment_method: null, 
+      subscription_status: null, 
+      reason: '' 
+    });
+  }
+
+  deleteSelectedRows(): void {
+    if (confirm('Are you sure you want to delete the selected items?')) {
+      // Filter out selected rows (in reverse order to avoid index issues)
+      this.itemsList = this.itemsList.filter((_, index) => 
+        !this.selectedRows.includes(index)
+      );
+      this.selectedRows = [];
+    }
+  }
+
+  fetchUser(id: number): void {
+    this.http.get<any>(`${this.API_URL}/user/${id}`).subscribe({
+      next: (user) => {
+        this.currentRecord = {
+          ...this.currentRecord,
+          ...user,
+          date_of_birth: this.parseDateFromBackend(user.date_of_birth),
+          subscribe_start: this.parseDateFromBackend(user.subscribe_start),
+          subscribe_end: this.parseDateFromBackend(user.subscribe_end),
+        };
+
+        // Image preview setup
+        if (user.images?.image_name) {
+          this.imagePreview = `${this.IMAGE_URL}/uploads/users/${user.images.image_name}`;
+        }
+
+        this.isEditMode = true;
+
+        // ✅ Populate itemsList with existing subscription items
+        if (user.subscriptions && Array.isArray(user.subscriptions)) {
+          this.itemsList = user.subscriptions.map((item: any) => ({
+            id: item.id,
+            subscribe_start: this.parseDateFromBackend(item.subscribe_start),
+            subscribe_end: this.parseDateFromBackend(item.subscribe_end),
+            service_charges: item.service_charges,
+            payment_method: item.payment_method,
+            subscription_status: item.subscription_status,
+            reason: item.reason || ''
+          }));
+        }
+      },
+      error: (error) => {
+        console.error('Failed to fetch user:', error);
       }
-  
-      this.isEditMode = true;
     });
   }
 
   fetchCompanies(): void {
     this.http.get<any[]>(`${this.API_URL}/active/companies`).subscribe({
       next: (response) => {
-        // Map each asset type to add a custom label
-        this.companies = response.map((companies) => ({
-          ...companies
-        }));
+        this.companies = response;
       },
-      error: (error) => console.error('Failed to fetch employees:', error)
+      error: (error) => console.error('Failed to fetch companies:', error)
     });
   }
 
@@ -200,16 +271,13 @@ export class UsersSetupComponent {
     });
   }
 
-  // Convert from backend string to NgbDateStruct
   private parseDateFromBackend(dateString: string | undefined): NgbDateStruct | null {
     if (!dateString) return null;
     
-    // If already in NgbDateStruct format, return it
     if (typeof dateString === 'object' && 'year' in dateString) {
       return dateString;
     }
     
-    // Parse string date
     const parts = dateString.split('-');
     return {
       year: parseInt(parts[0], 10),
@@ -219,91 +287,143 @@ export class UsersSetupComponent {
   }
 
   formatDate(date: NgbDateStruct | string | null | undefined): string {
-    if (typeof date === 'string') return date;
     if (!date) return '';
-    return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
+    
+    // If it's already a string (from backend), return it
+    if (typeof date === 'string') return date;
+    
+    // If it's an NgbDateStruct object
+    if (typeof date === 'object' && 'year' in date) {
+      return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
+    }
+    
+    return '';
   }
 
-  
-  // Add your onSubmit method
+  prepareFormData(): FormData {
+    const formData = new FormData();
+    
+    // Add user data
+    Object.entries(this.currentRecord).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== '') {
+        if (key === 'purchase_date' || key === 'subscribe_start' || 
+            key === 'subscribe_end' || key === 'date_of_birth') {
+          formData.append(key, this.formatDate(value));
+        } else {
+          formData.append(key, value);
+        }
+      }
+    });
+    
+    // Add image if selected
+    if (this.selectedFile) {
+      formData.append('user_image', this.selectedFile);
+    }
+    
+    // Add subscription items
+    this.itemsList.forEach((item, index) => {
+      if (item.id) formData.append(`items[${index}][id]`, item.id.toString());
+      
+      // Both dates should be included
+      if (item.subscribe_start) {
+        formData.append(
+          `items[${index}][subscribe_start]`, 
+          this.formatDate(item.subscribe_start)
+        );
+      }
+      
+      if (item.subscribe_end) {  // This was likely missing
+        formData.append(
+          `items[${index}][subscribe_end]`, 
+          this.formatDate(item.subscribe_end)
+        );
+      }
+      
+      if (item.service_charges) {
+        formData.append(
+          `items[${index}][service_charges]`, 
+          item.service_charges
+        );
+      }
+      
+      if (item.payment_method) {
+        formData.append(
+          `items[${index}][payment_method]`, 
+          item.payment_method
+        );
+      }
+      
+      if (item.subscription_status) {
+        formData.append(
+          `items[${index}][subscription_status]`, 
+          item.subscription_status
+        );
+      }
+      
+      if (item.reason) {
+        formData.append(
+          `items[${index}][reason]`, 
+          item.reason
+        );
+      }
+    });
+    
+    formData.append('ng_url', this.NG_URL);
+    
+    // For debugging - log the form data
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+    
+    return formData;
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreview = e.target?.result || null;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
   onSubmit(event: Event): void {
     event.preventDefault();
-    this.isLoading = true;  
+    this.isLoading = true;
+    this.globalErrorMessage = '';
+    this.formErrors = {};
 
-    const format_Dob = this.formatDate(this.currentRecord.date_of_birth);
-    const subscribe_start = this.formatDate(this.currentRecord.subscribe_start);
-    const subscribe_end = this.formatDate(this.currentRecord.subscribe_end);
+    const formData = this.prepareFormData();
+    formData.append('ng_url', this.NG_URL);
 
-    const currentRecord = {
-      company_id: this.currentRecord.company_id,
-      first_name: this.currentRecord.first_name,
-      last_name: this.currentRecord.last_name,
-      username: this.currentRecord.username,
-      email: this.currentRecord.email,
-      phone_number: this.currentRecord.phone_number,
-      subscribe_start: subscribe_start || null,
-      subscribe_end: subscribe_end || null,
-      refer_by: this.currentRecord.refer_by,
-      gender: this.currentRecord.gender,
-      date_of_birth: format_Dob || null,
-      city_id: this.currentRecord.city_id,
-      status: this.currentRecord.status,
-      address: this.currentRecord.address,
-      ng_url: this.NG_URL,
-    };
-  
-    this.http.post(`${this.API_URL}/users/register`, currentRecord).subscribe({
+    const endpoint = this.isEditMode ? 
+      `${this.API_URL}/users/update/${this.currentRecord.id}?_method=PUT` : 
+      `${this.API_URL}/users/register`;
+
+    this.http.post(endpoint, formData).subscribe({
       next: (response) => {
         this.isLoading = false;
         this.router.navigate(['/users']);
       },
       error: (error) => {
         this.isLoading = false;
-        this.formErrors = error.error.errors || {};
-  
-        // Show global error
+        
+        if (error?.error?.errors) {
+          this.formErrors = error.error.errors;
+        }
+        
         this.globalErrorMessage = 'Please fill all required fields correctly.';
-  
-        // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
   }
 
   updateRecord(event: Event): void {
-    event.preventDefault();
-    this.isLoading = true;
-  
-    const formData = new FormData();
-    const entries = Object.entries(this.currentRecord) as [keyof User, any][];
-  
-    for (const [key, value] of entries) {
-      if (value !== null && value !== undefined && value !== '') {
-        if (key === 'purchase_date' || key === 'subscribe_start' || key === 'subscribe_end' || key === 'date_of_birth') {
-          formData.append(key, this.formatDate(value));
-        } else {
-          formData.append(key, value);
-        }
-      }
-    }
-  
-    if (this.selectedFile) {
-      formData.append('user_image', this.selectedFile);
-    }
-  
-    // Proceed with the API request to update user data
-    this.http.post(`${this.API_URL}/users/update/${this.currentRecord.id}?_method=PUT`, formData).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        this.router.navigate(['/users']);
-      },
-      error: (error) => {
-        this.isLoading = false;
-        // Check if the error is related to a duplicate value like email, etc.
-        if (error?.error?.errors) {
-          this.formErrors = error.error.errors;
-        }
-      }
-    });
+    this.onSubmit(event);
   }
 }

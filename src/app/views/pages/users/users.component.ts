@@ -20,6 +20,7 @@ import { environment } from '../../../environments/environment';
 export class UsersComponent {
   private API_URL = environment.API_URL;
   private IMAGE_URL = environment.IMAGE_URL;
+  private NG_URL = environment.NG_URL;
 
   selected: { id: number; [key: string]: any }[] = [];
   rows: { id: number; [key: string]: any }[] = [];
@@ -42,13 +43,11 @@ export class UsersComponent {
     const val = (event.target as HTMLInputElement).value.toLocaleLowerCase();
     
     // filter our data
-    const temp = this.temp.filter(function(d: any) {
-      return d.full_name.toLocaleLowerCase().indexOf(val) !== -1 || !val;
-    })
-
-    // update the rows
-    this.rows = temp;
-
+    this.rows = this.temp.filter(d =>
+      (d.pin_code && d.pin_code.toLowerCase().includes(val)) ||
+      (d.full_name && d.full_name.toLowerCase().includes(val))
+    );
+    
     // whenever the filter changes, always go back to the first page
     this.table.offset = 0;
   }
@@ -80,13 +79,21 @@ export class UsersComponent {
         this.loadingIndicator = false;
 
         const today = new Date();
+        today.setHours(0, 0, 0, 0); // normalize today to midnight
 
         this.rows.forEach((user) => {
-          // ✅ Calculate remaining days
-          const endDate = new Date(user.subscribe_end);
-          const diffTime = endDate.getTime() - today.getTime();
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          user.remaining_days = diffDays >= 0 ? diffDays : 0;
+          // ✅ Calculate remaining days safely
+          if (user.subscribe_end) {
+            const endDate = new Date(user.subscribe_end);
+            endDate.setHours(0, 0, 0, 0); // normalize endDate to midnight
+
+            const diffTime = endDate.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            user.remaining_days = diffDays >= 0 ? diffDays : 0;
+          } else {
+            user.remaining_days = 0;
+          }
 
           // ✅ Process image URL
           user.user_image = user.user_image
@@ -98,6 +105,20 @@ export class UsersComponent {
         this.loadingIndicator = false;
       }
     });
+  }
+  
+  resendEmail(user: any) {
+    if (confirm('Are you sure you want to resend email to this user?')) {
+      this.http.post(`${this.API_URL}/users/resend-email`, { user_id: user.id, ng_url: this.NG_URL }).subscribe(
+        (response: any) => {
+          alert(response.message);
+        },
+        (error) => {
+          console.error('Error resending email:', error);
+          alert('Failed to resend email. Please try again later.');
+        }
+      );
+    }
   }
 
   deleteSelectedRecords(): void {

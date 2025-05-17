@@ -113,7 +113,6 @@ export class CompaniesComponent implements OnInit {
   fetchCompanies(): void {
     this.http.get<Company[]>(`${this.API_URL}/companies`).subscribe({
       next: (response) => {
-        console.log(response)
         this.rows = response;
         this.temp = [...response];
         this.loadingIndicator = false;

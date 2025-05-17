@@ -20,8 +20,9 @@ export class ProfileComponent {
   private API_URL = environment.API_URL;
   private IMAGE_URL = environment.IMAGE_URL;
   
+  totalServiceCharges: number = 0;
   currentRecord: any = {};
-
+  itemsList: any = {} = [];
   loadingIndicator = true;
   isEditMode = false;
   image: string | ArrayBuffer | null = null;
@@ -39,23 +40,32 @@ export class ProfileComponent {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
-        this.fetchUsers(+id);
+        this.loadUser(+id);
       }
     });
   }
 
-  fetchUsers(id: number) {
-    this.http.get<[]>(`${this.API_URL}/user/${id}`).subscribe(user => {
-      this.currentRecord = {
-        ...this.currentRecord,
-        ...user
-      };
-  
-      // if (user.images && user.images.image_name) {
-      //   this.imagePreview = `${this.IMAGE_URL}/uploads/users/${user.images.image_name}`;
-      // }
-  
+  calculateTotalServiceCharges(): void {
+    this.totalServiceCharges = this.itemsList.reduce((sum: number, item: any) => {
+      const charge = parseFloat(item.service_charges) || 0;
+      return sum + charge;
+    }, 0);
+  }
+
+  loadUser(id: number) {
+    this.http.get<any>(`${this.API_URL}/user/${id}`).subscribe(user => {
+      this.currentRecord = user;
+      
+      this.itemsList = user.subscriptions || [];
+      this.calculateTotalServiceCharges();
+
+      // If user has image
+      if (user.user_image) {
+        this.imagePreview = `${this.IMAGE_URL}/uploads/users/${user.user_image}`;
+      }
+
       this.isEditMode = true;
+      this.loadingIndicator = false;
     });
   }
 

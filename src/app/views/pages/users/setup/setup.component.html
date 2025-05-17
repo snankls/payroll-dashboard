@@ -64,12 +64,6 @@
               <input type="text" class="form-control" name="advance_fee" [(ngModel)]="currentRecord.advance_fee" (ngModelChange)="clearError('advance_fee')">
               <div class="text-danger mt-1" *ngIf="formErrors.advance_fee">{{ formErrors.advance_fee[0] }}</div>
             </div>
-
-            <div class="col-md-3 mb-3">
-              <label class="form-label">Services Fee</label>
-              <input type="text" class="form-control" name="services_fee" [(ngModel)]="currentRecord.services_fee" (ngModelChange)="clearError('services_fee')">
-              <div class="text-danger mt-1" *ngIf="formErrors.services_fee">{{ formErrors.services_fee[0] }}</div>
-            </div>
         
             <div class="col-md-3 mb-3">
               <label class="form-label">Subscribe Start</label>
@@ -166,6 +160,133 @@
               <label class="form-label">Address</label>
               <textarea class="form-control" name="address" rows="3" [(ngModel)]="currentRecord.address" (ngModelChange)="clearError('address')"></textarea>
               <div class="text-danger mt-1" *ngIf="formErrors.address">{{ formErrors.address[0] }}</div>
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th [width]="30">#</th>
+                      <th [width]="30">
+                        <input
+                          type="checkbox"
+                          [checked]="selected.length > 0 && selected.length === itemsList.length - 1"
+                          (change)="selectAll($event)"
+                        />
+                      </th>
+                      <th>Subscription Start</th>
+                      <th>Subscription End</th>
+                      <th>Service Charges</th>
+                      <th>Payment Method</th>
+                      <th>Description</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let item of itemsList; let i = index">
+                      <tr *ngIf="i >= 0">
+                        <th>{{ i + 1 }}</th>
+                        <td>
+                          <input
+                            type="checkbox"
+                            name="company_asset_detail_id"
+                            [checked]="isSelected(i)"
+                            (change)="toggleSelection(i)"
+                            [value]="item.id"
+                          />
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <input class="form-control"
+                              placeholder="yyyy-mm-dd"
+                              [(ngModel)]="itemsList[i].subscribe_start"
+                              name="subscribe_start_{{i}}"
+                              [container]="'body'"
+                              ngbDatepicker
+                              #d1="ngbDatepicker"
+                            />
+                            <button class="input-group-text" type="button" (click)="d1.toggle()">
+                              <i class="feather icon-calendar"></i>
+                            </button>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="input-group">
+                            <input class="form-control"
+                              placeholder="yyyy-mm-dd"
+                              [(ngModel)]="itemsList[i].subscribe_end"
+                              name="subscribe_end_{{i}}"
+                              [container]="'body'"
+                              ngbDatepicker
+                              #d2="ngbDatepicker"
+                            />
+                            <button class="input-group-text" type="button" (click)="d2.toggle()">
+                              <i class="feather icon-calendar"></i>
+                            </button>
+                          </div>
+                        </td>
+                        <td>
+                          <input type="text" class="form-control" name="service_charges_{{ i }}" [(ngModel)]="itemsList[i].service_charges" (ngModelChange)="clearItemError(i, 'service_charges')">
+                          <div class="text-danger mt-1" *ngIf="formErrors['items.' + i + '.service_charges']">
+                            {{ formErrors['items.' + i + '.service_charges'][0] }}
+                          </div>
+                        </td>
+                        <td>
+                          <ng-select
+                            [items]="payment_method"
+                            bindLabel="name"
+                            bindValue="id"
+                            [(ngModel)]="itemsList[i].payment_method"
+                            name="payment_method_{{i}}"
+                            placeholder="Select one"
+                            [searchable]="false"
+                            [appendTo]="'body'"
+                            (change)="clearItemError(i, 'payment_method')">
+                          </ng-select>
+                          <div class="text-danger mt-1" *ngIf="formErrors.payment_method">{{ formErrors.payment_method[0] }}</div>
+                        </td>
+                        <td>
+                          <textarea
+                            class="form-control"
+                            name="reason_{{ i }}"
+                            rows="2"
+                            [(ngModel)]="itemsList[i].reason"
+                            (ngModelChange)="clearItemError(i, 'reason')"
+                            [ngModelOptions]="{ standalone: true }"
+                          ></textarea>
+                          <div class="text-danger mt-1" *ngIf="formErrors['items.' + i + '.reason']">
+                            {{ formErrors['items.' + i + '.reason'][0] }}
+                          </div>
+                        </td>
+                        <td>
+                          <ng-select
+                            [items]="subscription_status"
+                            bindLabel="name"
+                            bindValue="id"
+                            [(ngModel)]="itemsList[i].subscription_status"
+                            name="subscription_status_{{i}}"
+                            placeholder="Select one"
+                            [searchable]="false"
+                            [appendTo]="'body'"
+                            (change)="clearError('subscription_status')">
+                          </ng-select>
+                          <div class="text-danger mt-1" *ngIf="formErrors.subscription_status">{{ formErrors.subscription_status[0] }}</div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+                
+                <div class="col-md-4 mt-3 d-flex gap-2">
+                  <button class="btn btn-success btn-xs" type="button" (click)="addItemRow()">
+                    Add New Row
+                  </button>
+                  <button class="btn btn-danger btn-xs" type="button" (click)="deleteSelectedRows()" [disabled]="selectedRows.length === 0">
+                    Delete Selected
+                  </button>
+                </div>                
+              </div>
             </div>
         
             <!-- Form Actions -->

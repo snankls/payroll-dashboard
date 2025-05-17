@@ -60,3 +60,13 @@ label.form-label,
 [data-bs-theme=light] .auth-page .logo-mini-wrapper .logo-mini.logo-mini-dark {
   display: none;
 }
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.custom-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem; /* optional */
+}

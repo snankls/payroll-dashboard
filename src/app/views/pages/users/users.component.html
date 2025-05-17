@@ -9,9 +9,9 @@
             <input
               type="text"
               class="form-control form-control-sm"
-              placeholder="Type to filter the name column..."
+              placeholder="Type to filter the pincode and name column..."
               (keyup)="updateFilter($event)"
-              style="width: 250px;"
+              style="width: 300px;"
             />
           </div>
           <div class="gap-4">
@@ -54,6 +54,12 @@
               </ng-template>
             </ngx-datatable-column>
             
+            <ngx-datatable-column [width]="90" name="Pin Code">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.pin_code }}
+              </ng-template>
+            </ngx-datatable-column>
+            
             <ngx-datatable-column name="Full Name">
               <ng-template ngx-datatable-cell-template let-row="row">
                 {{ row.full_name }}
@@ -78,21 +84,15 @@
               </ng-template>
             </ngx-datatable-column>
             
-            <ngx-datatable-column name="Services Fee">
+            <ngx-datatable-column name="Service Charges">
               <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.services_fee }}
+                {{ row.service_charges }}
               </ng-template>
             </ngx-datatable-column>
             
             <ngx-datatable-column name="Purchase Date">
               <ng-template ngx-datatable-cell-template let-row="row">
                 {{ row.purchase_date | date:'yyyy-MM-dd' }}
-              </ng-template>
-            </ngx-datatable-column>
-            
-            <ngx-datatable-column name="Subscribe Start">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.subscribe_start | date:'yyyy-MM-dd' }}
               </ng-template>
             </ngx-datatable-column>
             
@@ -114,7 +114,7 @@
               </ng-template>
             </ngx-datatable-column>
             
-            <ngx-datatable-column name="User Name">
+            <ngx-datatable-column name="Username">
               <ng-template ngx-datatable-cell-template let-row="row">
                 {{ row.username }}
               </ng-template>
@@ -158,6 +158,10 @@
             <ngx-datatable-column name="Action" [sortable]="false">
               <ng-template ngx-datatable-cell-template let-row="row">
                 <span class="d-flex align-items-center">
+                  <a href="javascript:;" class="btn btn-info me-1 action-btn" (click)="resendEmail(row)">
+                    <i class="feather icon-repeat"></i>
+                  </a>
+
                   <a href="users/profile/{{ row.id }}" class="btn btn-primary me-1 action-btn">
                     <i class="feather icon-eye"></i>
                   </a>
