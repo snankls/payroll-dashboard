@@ -25,6 +25,7 @@ interface User {
   subscribe_start?: NgbDateStruct | string | null;
   subscribe_end?: NgbDateStruct | string | null;
   refer_by: string | null;
+  refer_amount: string | null;
   date_of_birth?: NgbDateStruct | string | null;
   city_id: number | null;
   status: string | null;
@@ -78,6 +79,7 @@ export class UsersSetupComponent implements OnInit {
     subscribe_start: null,
     subscribe_end: null,
     refer_by: null,
+    refer_amount: null,
     phone_number: '',
     gender: 'Male',
     date_of_birth: null,
@@ -93,10 +95,10 @@ export class UsersSetupComponent implements OnInit {
   selectedRows: number[] = [];
   formErrors: Record<string, string[]> = {};
   selected: any[] = [];
-  
-  // Dropdown options
   companies: any[] = [];
   cities: any[] = [];
+  
+  // Dropdown options
   gender: { id: string; name: string }[] = [
     { id: 'Male', name: 'Male' },
     { id: 'Female', name: 'Female' },
@@ -106,10 +108,12 @@ export class UsersSetupComponent implements OnInit {
   status: { id: string; name: string }[] = [
     { id: 'Active', name: 'Active' },
     { id: 'Inactive', name: 'Inactive' },
+    { id: 'Trail', name: 'Trail' },
     { id: 'Disabled', name: 'Disabled' },
   ];
   
   payment_method: { id: string; name: string }[] = [
+    { id: 'Cash', name: 'Cash' },
     { id: 'Bank', name: 'Bank' },
     { id: 'JazzCash', name: 'JazzCash' },
     { id: 'Easypaisa', name: 'Easypaisa' },

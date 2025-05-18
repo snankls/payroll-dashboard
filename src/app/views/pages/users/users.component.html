@@ -138,6 +138,7 @@
                   [ngClass]="{
                     'bg-success text-white': row.status === 'Active',
                     'bg-danger text-white': row.status === 'Inactive',
+                    'bg-dark text-white': row.status === 'Trail',
                     'bg-warning text-dark': row.status === 'Disabled'
                   }">
                   {{ row.status }}
