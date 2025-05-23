@@ -42,6 +42,7 @@ interface SubscriptionItem {
   subscribe_start: NgbDateStruct | string | null;
   subscribe_end: NgbDateStruct | string | null;
   service_charges: string | null;
+  discount: string | null;
   payment_method: string | null;
   subscription_status: string | null;
   reason: string;
@@ -131,6 +132,7 @@ export class UsersSetupComponent implements OnInit {
     subscribe_start: null, 
     subscribe_end: null, 
     service_charges: null, 
+    discount: null, 
     payment_method: null, 
     subscription_status: null, 
     reason: '' 
@@ -204,6 +206,7 @@ export class UsersSetupComponent implements OnInit {
       subscribe_start: null, 
       subscribe_end: null, 
       service_charges: null, 
+      discount: null, 
       payment_method: null, 
       subscription_status: null, 
       reason: '' 
@@ -226,6 +229,7 @@ export class UsersSetupComponent implements OnInit {
         this.currentRecord = {
           ...this.currentRecord,
           ...user,
+          company_id: user.company_id ? +user.company_id : null,
           date_of_birth: this.parseDateFromBackend(user.date_of_birth),
           subscribe_start: this.parseDateFromBackend(user.subscribe_start),
           subscribe_end: this.parseDateFromBackend(user.subscribe_end),
@@ -245,6 +249,7 @@ export class UsersSetupComponent implements OnInit {
             subscribe_start: this.parseDateFromBackend(item.subscribe_start),
             subscribe_end: this.parseDateFromBackend(item.subscribe_end),
             service_charges: item.service_charges,
+            discount: item.discount,
             payment_method: item.payment_method,
             subscription_status: item.subscription_status,
             reason: item.reason || ''
@@ -347,6 +352,13 @@ export class UsersSetupComponent implements OnInit {
         formData.append(
           `items[${index}][service_charges]`, 
           item.service_charges
+        );
+      }
+      
+      if (item.discount) {
+        formData.append(
+          `items[${index}][discount]`, 
+          item.discount
         );
       }
       

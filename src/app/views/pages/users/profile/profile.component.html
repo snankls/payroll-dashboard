@@ -28,11 +28,15 @@
             </tr>
             <tr>
               <td>Advance Fee</td>
-              <td>{{ currentRecord.advance_fee | number }}</td>
+              <td>{{ currentRecord.advance_fee ? (currentRecord.advance_fee | number) : 0 }}</td>
             </tr>
             <tr>
               <td>Services Charges</td>
-              <td>{{ currentRecord.service_charges | number }}</td>
+              <td>{{ currentRecord.service_charges ? (currentRecord.service_charges | number) : 0 }}</td>
+            </tr>
+            <tr>
+              <td>Discount</td>
+              <td>{{ currentRecord.discount ? (currentRecord.discount | number) : 0 }}</td>
             </tr>
             <tr>
               <td>Purchase Date</td>
@@ -85,6 +89,7 @@
                 <th>Subscription Start</th>
                 <th>Subscription End</th>
                 <th>Service Charges</th>
+                <th>Discount</th>
                 <th>Payment Method</th>
                 <th>Reason</th>
                 <th>Status</th>
@@ -94,7 +99,8 @@
               <tr *ngFor="let item of itemsList; let i = index">
                 <td>{{ item.subscribe_start }}</td>
                 <td>{{ item.subscribe_end }}</td>
-                <td>{{ item.service_charges | number }}</td>
+                <td>{{ item.service_charges ? (item.service_charges | number) : 0 }}</td>
+                <td>{{ item.discount ? (item.discount | number) : 0 }}</td>
                 <td>{{ item.payment_method }}</td>
                 <td>{{ item.reason }}</td>
                 <td>{{ item.subscription_status }}</td>

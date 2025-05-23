@@ -49,54 +49,9 @@
             </div>
         
             <div class="col-md-3 mb-3">
-              <label class="form-label">Purchase Date</label>
-              <div class="input-group">
-                <input class="form-control" placeholder="yyyy-mm-dd" name="purchase_date" ngbDatepicker #purchase_date="ngbDatepicker" [(ngModel)]="currentRecord.purchase_date" (ngModelChange)="clearError('purchase_date')">
-                <button class="input-group-text" type="button" (click)="purchase_date.toggle()">
-                  <i class="feather icon-calendar icon-md text-secondary"></i>
-                </button>
-              </div>
-              <div class="text-danger mt-1" *ngIf="formErrors.purchase_date">{{ formErrors.purchase_date[0] }}</div>
-            </div>
-
-            <div class="col-md-3 mb-3">
-              <label class="form-label">Advance Fee</label>
-              <input type="text" class="form-control" name="advance_fee" [(ngModel)]="currentRecord.advance_fee" (ngModelChange)="clearError('advance_fee')">
-              <div class="text-danger mt-1" *ngIf="formErrors.advance_fee">{{ formErrors.advance_fee[0] }}</div>
-            </div>
-        
-            <div class="col-md-3 mb-3">
-              <label class="form-label">Subscribe Start</label>
-              <div class="input-group">
-                <input class="form-control" placeholder="yyyy-mm-dd" name="subscribe_start" ngbDatepicker #subscribe_start="ngbDatepicker" [(ngModel)]="currentRecord.subscribe_start" (ngModelChange)="clearError('subscribe_start')">
-                <button class="input-group-text" type="button" (click)="subscribe_start.toggle()">
-                  <i class="feather icon-calendar icon-md text-secondary"></i>
-                </button>
-              </div>
-              <div class="text-danger mt-1" *ngIf="formErrors.subscribe_start">{{ formErrors.subscribe_start[0] }}</div>
-            </div>
-        
-            <div class="col-md-3 mb-3">
-              <label class="form-label">Subscribe End</label>
-              <div class="input-group">
-                <input class="form-control" placeholder="yyyy-mm-dd" name="subscribe_end" ngbDatepicker #subscribe_end="ngbDatepicker" [(ngModel)]="currentRecord.subscribe_end" (ngModelChange)="clearError('subscribe_end')">
-                <button class="input-group-text" type="button" (click)="subscribe_end.toggle()">
-                  <i class="feather icon-calendar icon-md text-secondary"></i>
-                </button>
-              </div>
-              <div class="text-danger mt-1" *ngIf="formErrors.subscribe_end">{{ formErrors.subscribe_end[0] }}</div>
-            </div>
-        
-            <div class="col-md-3 mb-3">
-              <label class="form-label">Refer By</label>
-              <input type="text" class="form-control" name="refer_by" [(ngModel)]="currentRecord.refer_by" (ngModelChange)="clearError('refer_by')">
-              <div class="text-danger mt-1" *ngIf="formErrors.refer_by">{{ formErrors.refer_by[0] }}</div>
-            </div>
-        
-            <div class="col-md-3 mb-3">
-              <label class="form-label">Refer Amount</label>
-              <input type="text" class="form-control" name="refer_amount" [(ngModel)]="currentRecord.refer_amount" (ngModelChange)="clearError('refer_amount')">
-              <div class="text-danger mt-1" *ngIf="formErrors.refer_by">{{ formErrors.refer_amount[0] }}</div>
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-control" name="phone_number" [(ngModel)]="currentRecord.phone_number" (ngModelChange)="clearError('phone_number')">
+              <div class="text-danger mt-1" *ngIf="formErrors.phone_number">{{ formErrors.phone_number[0] }}</div>
             </div>
         
             <div class="col-md-3 mb-3">
@@ -142,9 +97,32 @@
             </div>
         
             <div class="col-md-3 mb-3">
-              <label class="form-label">Phone Number</label>
-              <input type="text" class="form-control" name="phone_number" [(ngModel)]="currentRecord.phone_number" (ngModelChange)="clearError('phone_number')">
-              <div class="text-danger mt-1" *ngIf="formErrors.phone_number">{{ formErrors.phone_number[0] }}</div>
+              <label class="form-label">Purchase Date</label>
+              <div class="input-group">
+                <input class="form-control" placeholder="yyyy-mm-dd" name="purchase_date" ngbDatepicker #purchase_date="ngbDatepicker" [(ngModel)]="currentRecord.purchase_date" (ngModelChange)="clearError('purchase_date')">
+                <button class="input-group-text" type="button" (click)="purchase_date.toggle()">
+                  <i class="feather icon-calendar icon-md text-secondary"></i>
+                </button>
+              </div>
+              <div class="text-danger mt-1" *ngIf="formErrors.purchase_date">{{ formErrors.purchase_date[0] }}</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Advance Fee</label>
+              <input type="text" class="form-control" name="advance_fee" [(ngModel)]="currentRecord.advance_fee" (ngModelChange)="clearError('advance_fee')">
+              <div class="text-danger mt-1" *ngIf="formErrors.advance_fee">{{ formErrors.advance_fee[0] }}</div>
+            </div>
+        
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Refer By</label>
+              <input type="text" class="form-control" name="refer_by" [(ngModel)]="currentRecord.refer_by" (ngModelChange)="clearError('refer_by')">
+              <div class="text-danger mt-1" *ngIf="formErrors.refer_by">{{ formErrors.refer_by[0] }}</div>
+            </div>
+        
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Refer Amount</label>
+              <input type="text" class="form-control" name="refer_amount" [(ngModel)]="currentRecord.refer_amount" (ngModelChange)="clearError('refer_amount')">
+              <div class="text-danger mt-1" *ngIf="formErrors.refer_by">{{ formErrors.refer_amount[0] }}</div>
             </div>
         
             <div class="col-md-3 mb-3">
@@ -184,6 +162,7 @@
                       <th>Subscription Start</th>
                       <th>Subscription End</th>
                       <th>Service Charges</th>
+                      <th>Discount</th>
                       <th>Payment Method</th>
                       <th>Description</th>
                       <th>Status</th>
@@ -236,6 +215,12 @@
                           <input type="text" class="form-control" name="service_charges_{{ i }}" [(ngModel)]="itemsList[i].service_charges" (ngModelChange)="clearItemError(i, 'service_charges')">
                           <div class="text-danger mt-1" *ngIf="formErrors['items.' + i + '.service_charges']">
                             {{ formErrors['items.' + i + '.service_charges'][0] }}
+                          </div>
+                        </td>
+                        <td>
+                          <input type="text" class="form-control" name="discount_{{ i }}" [(ngModel)]="itemsList[i].discount" (ngModelChange)="clearItemError(i, 'discount')">
+                          <div class="text-danger mt-1" *ngIf="formErrors['items.' + i + '.discount']">
+                            {{ formErrors['items.' + i + '.discount'][0] }}
                           </div>
                         </td>
                         <td>
