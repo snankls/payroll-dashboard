@@ -22,7 +22,6 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./views/pages/dashboard/dashboard.component').then(c => c.DashboardComponent),
         data: { title: 'Dashboard' },
-        canActivate: [AuthGuard]
       },
 
       // Companies
@@ -30,7 +29,6 @@ export const routes: Routes = [
         path: 'companies',
         loadComponent: () => import('./views/pages/companies/companies.component').then(c => c.CompaniesComponent),
         data: { title: 'Companies' },
-        canActivate: [AuthGuard]
       },
 
       // Users
@@ -38,7 +36,6 @@ export const routes: Routes = [
         path: 'users',
         loadComponent: () => import('./views/pages/users/users.component').then(c => c.UsersComponent),
         data: { title: 'Users' },
-        canActivate: [AuthGuard]
       },
 
       // Users Add
@@ -46,7 +43,6 @@ export const routes: Routes = [
         path: 'users/add',
         loadComponent: () => import('./views/pages/users/setup/setup.component').then(c => c.UsersSetupComponent),
         data: { title: 'Users Add' },
-        canActivate: [AuthGuard]
       },
 
       // Users Edit
@@ -54,7 +50,6 @@ export const routes: Routes = [
         path: 'users/edit/:id',
         loadComponent: () => import('./views/pages/users/setup/setup.component').then(c => c.UsersSetupComponent),
         data: { title: 'Users Edit' },
-        canActivate: [AuthGuard]
       },
 
       // User Profile
@@ -62,7 +57,6 @@ export const routes: Routes = [
         path: 'users/profile/:id',
         loadComponent: () => import('./views/pages/users/profile/profile.component').then(c => c.ProfileComponent),
         data: { title: 'User Profile' },
-        canActivate: [AuthGuard]
       },
 
       // Change Password
@@ -70,7 +64,6 @@ export const routes: Routes = [
         path: 'change-password',
         loadComponent: () => import('./views/pages/users/change-password/change-password.component').then(c => c.ChangePasswordComponent),
         data: { title: 'Change Password' },
-        canActivate: [AuthGuard]
       },
 
       // 404 Page

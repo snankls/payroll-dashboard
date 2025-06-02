@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ThemeModeService } from './views/services/theme-mode.service';
+import { ThemeModeService } from './core/services/theme-mode.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { Title } from '@angular/platform-browser';

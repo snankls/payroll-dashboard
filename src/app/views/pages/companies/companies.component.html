@@ -59,7 +59,7 @@
               </ng-template>
             </ngx-datatable-column>
             
-            <ngx-datatable-column name="Created By" [width]="80">
+            <ngx-datatable-column name="Created By" >
               <ng-template ngx-datatable-cell-template let-row="row">
                 <div>
                   {{ row.created_by }}
@@ -69,7 +69,7 @@
               </ng-template>
             </ngx-datatable-column>
         
-            <ngx-datatable-column name="Action" [sortable]="false" [width]="50">
+            <ngx-datatable-column name="Action" [sortable]="false">
               <ng-template ngx-datatable-cell-template let-row="row">
                 <span class="d-flex align-items-center">
                   <button class="btn btn-warning me-1 action-btn" (click)="editRecord(row)">

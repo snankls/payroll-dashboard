@@ -54,7 +54,6 @@ export class ProfileComponent {
 
   loadUser(id: number) {
     this.http.get<any>(`${this.API_URL}/user/${id}`).subscribe(user => {
-      console.log("user profile", user)
       this.currentRecord = user;
       
       this.itemsList = user.subscriptions || [];
